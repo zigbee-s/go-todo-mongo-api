@@ -45,7 +45,7 @@ func getTodos(c *fiber.Ctx) error {
 		dbTodos = append(dbTodos, dbTodo)
 	}
 
-	return c.Status(500).JSON(fiber.Map{
+	return c.Status(200).JSON(fiber.Map{
 		"data": dbTodos,
 	})
 }
@@ -77,7 +77,7 @@ func getTodo(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Status(500).JSON(fiber.Map{
+	return c.Status(200).JSON(fiber.Map{
 		"data": dbTodo,
 	})
 }
@@ -137,7 +137,6 @@ func updateTodo(c *fiber.Ctx) error {
 			"error": "Invalid body",
 		})
 	}
-
 	// get the id
 	id := c.Params("id")
 	if id == "" {
@@ -152,17 +151,17 @@ func updateTodo(c *fiber.Ctx) error {
 		})
 	}
 
-	// update the book
+	// update the todo
 	coll := database.GetDBCollection("todos")
 	result, err := coll.UpdateOne(c.Context(), bson.M{"_id": objectId}, bson.M{"$set": b})
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{
-			"error":   "Failed to update book",
+			"error":   "Failed to update todo",
 			"message": err.Error(),
 		})
 	}
 
-	// return the book
+	// return the todo
 	return c.Status(200).JSON(fiber.Map{
 		"result": result,
 	})
